@@ -19,7 +19,7 @@ public class SwaggerConfig {
     public Docket productApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("br.com.gs3tecnologia.application.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.bancoPan.controller"))
                 .build()
                 .apiInfo(metaData());
     }
