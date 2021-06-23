@@ -3,6 +3,7 @@ package com.bancoPan.service;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
+import org.apache.commons.math3.util.Precision;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpStatus;
@@ -73,8 +74,11 @@ public class ApiService implements ApiFactory {
 			if (personEntity.getNome().equalsIgnoreCase(nome)) {
 
 				apiEntity.setNome(personEntity.getNome());
-				apiEntity.setValorPedido(valorPedido);
-				apiEntity.setSalario(personEntity.getSalario());
+
+				Double valorPedidoArredondado = valorComDuasCasas(valorPedido);
+				Double salarioArredondado = valorComDuasCasas(personEntity.getSalario());
+				apiEntity.setValorPedido(valorPedidoArredondado);
+				apiEntity.setSalario(salarioArredondado);
 
 				creditoAReceber = valorCreditoAReceber(personEntity.getIdade(), personEntity.getSalario());
 
@@ -82,8 +86,8 @@ public class ApiService implements ApiFactory {
 
 				quantidadeDeParcelas = quantidadeDeParcelas(creditoAReceber, valorParcela);
 
-				if (valorPedido <= creditoAReceber) {
-					apiEntity.setValorEmprestado(valorPedido);
+				if (valorPedidoArredondado <= creditoAReceber) {
+					apiEntity.setValorEmprestado(valorPedidoArredondado);
 				} else {
 					apiEntity.setValorEmprestado(creditoAReceber);
 				}
@@ -122,7 +126,9 @@ public class ApiService implements ApiFactory {
 
 		}
 
-		return creditoAReceber;
+		Double valorArredondado = valorComDuasCasas(creditoAReceber);
+
+		return valorArredondado;
 
 	}
 
@@ -151,7 +157,9 @@ public class ApiService implements ApiFactory {
 
 		}
 
-		return valorParcela;
+		Double valorArredondado = Precision.round(valorParcela, 2);
+
+		return valorArredondado;
 
 	}
 
@@ -162,6 +170,10 @@ public class ApiService implements ApiFactory {
 //		quantidadeParcelas = (int) (valorEmprestado / valorDaParcela ) ;
 
 		return quantidadeParcelas;
+	}
+
+	public Double valorComDuasCasas(Double valor) {
+		return Precision.round(valor, 2);
 	}
 
 }
