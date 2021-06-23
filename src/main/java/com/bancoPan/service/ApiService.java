@@ -77,21 +77,23 @@ public class ApiService implements ApiFactory {
 
 				Double valorPedidoArredondado = valorComDuasCasas(valorPedido);
 				Double salarioArredondado = valorComDuasCasas(personEntity.getSalario());
+
 				apiEntity.setValorPedido(valorPedidoArredondado);
 				apiEntity.setSalario(salarioArredondado);
 
 				creditoAReceber = valorCreditoAReceber(personEntity.getIdade(), personEntity.getSalario());
-
-				valorParcela = valorParcela(apiEntity.getSalario());
-
-				quantidadeDeParcelas = quantidadeDeParcelas(creditoAReceber, valorParcela);
-
+				
 				if (valorPedidoArredondado <= creditoAReceber) {
 					apiEntity.setValorEmprestado(valorPedidoArredondado);
 				} else {
 					apiEntity.setValorEmprestado(creditoAReceber);
 				}
 
+				valorParcela = valorParcela(apiEntity.getValorEmprestado(), apiEntity.getSalario());
+
+				quantidadeDeParcelas = quantidadeDeParcelas(apiEntity.getValorEmprestado(), valorParcela);
+
+			
 				apiEntity.setValorParcela(valorParcela);
 				apiEntity.setQuantidadeParcelas(quantidadeDeParcelas);
 			}
@@ -132,44 +134,46 @@ public class ApiService implements ApiFactory {
 
 	}
 
-	public Double valorParcela(Double salario) {
+	public Double valorParcela(Double valorCreditoEmprestado, Double salario) {
 
 		Double valorParcela = null;
 
-		if (salario >= 1000 && salario <= 2000) {
+		if (valorCreditoEmprestado >= 1000 && valorCreditoEmprestado <= 2000) {
 			valorParcela = salario * DE_1K_A_2K;
-		} else if (salario >= 2001 && salario <= 3000) {
+		} else if (valorCreditoEmprestado >= 2001 && valorCreditoEmprestado <= 3000) {
 			valorParcela = salario * DE_2K_A_3K;
-		} else if (salario >= 3001 && salario <= 4000) {
+		} else if (valorCreditoEmprestado >= 3001 && valorCreditoEmprestado <= 4000) {
 			valorParcela = salario * DE_3K_A_4K;
-		} else if (salario >= 4001 && salario <= 5000) {
+		} else if (valorCreditoEmprestado >= 4001 && valorCreditoEmprestado <= 5000) {
 			valorParcela = salario * DE_4K_A_5K;
-		} else if (salario >= 5001 && salario <= 6000) {
+		} else if (valorCreditoEmprestado >= 5001 && valorCreditoEmprestado <= 6000) {
 			valorParcela = salario * DE_5K_A_6K;
-		} else if (salario >= 6001 && salario <= 7000) {
+		} else if (valorCreditoEmprestado >= 6001 && valorCreditoEmprestado <= 7000) {
 			valorParcela = salario * DE_6K_A_7K;
-		} else if (salario >= 7001 && salario <= 8000) {
+		} else if (valorCreditoEmprestado >= 7001 && valorCreditoEmprestado <= 8000) {
 			valorParcela = salario * DE_7K_A_8K;
-		} else if (salario >= 8001 && salario <= 9000) {
+		} else if (valorCreditoEmprestado >= 8001 && valorCreditoEmprestado <= 9000) {
 			valorParcela = salario * DE_8K_A_9K;
-		} else if (salario >= 9001) {
+		} else if (valorCreditoEmprestado >= 9001) {
 			valorParcela = salario * MAIOR_QUE_9K;
-
 		}
-
 		Double valorArredondado = valorComDuasCasas(valorParcela);
 
 		return valorArredondado;
 
 	}
 
-	public Integer quantidadeDeParcelas(Double valorEmprestado, Double valorDaParcela) {
-		Integer quantidadeParcelas = null;
+	public Integer quantidadeDeParcelas(Double valorCreditoEmprestado, Double valorParcela) {
 
-		quantidadeParcelas = (int) (valorEmprestado / valorDaParcela) * 10;
-//		quantidadeParcelas = (int) (valorEmprestado / valorDaParcela ) ;
+		Double quantidadeParcelas = (valorCreditoEmprestado / valorParcela);
 
-		return quantidadeParcelas;
+		double arredondar = arredondarPraCima(quantidadeParcelas);
+		
+		return (int) arredondar;
+	}
+	
+	public double arredondarPraCima(Double valor) {	
+		return Math.ceil(valor);	
 	}
 
 	public Double valorComDuasCasas(Double valor) {
