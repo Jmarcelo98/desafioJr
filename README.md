@@ -10,3 +10,4 @@
 
 ## Para acessar o swagger-ui (após startar o back-end)
 * http://localhost:8080/swagger-ui.html
+* Caso não funcione, volte na IDE e olhe no Console em qual porta o Tomcat foi startado
