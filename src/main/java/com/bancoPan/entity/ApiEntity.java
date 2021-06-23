@@ -9,7 +9,7 @@ public class ApiEntity implements Serializable {
 	private Double salario;
 	private Double valorPedido;
 	private Double valorEmprestado;
-	private Double quantidadeParcelas;
+	private Integer quantidadeParcelas;
 	private Double valorParcela;
 
 	public String getNome() {
@@ -44,11 +44,11 @@ public class ApiEntity implements Serializable {
 		this.valorEmprestado = valorEmprestado;
 	}
 
-	public Double getQuantidadeParcelas() {
+	public Integer getQuantidadeParcelas() {
 		return quantidadeParcelas;
 	}
 
-	public void setQuantidadeParcelas(Double quantidadeParcelas) {
+	public void setQuantidadeParcelas(Integer quantidadeParcelas) {
 		this.quantidadeParcelas = quantidadeParcelas;
 	}
 

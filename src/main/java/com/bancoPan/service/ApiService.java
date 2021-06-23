@@ -79,13 +79,17 @@ public class ApiService implements ApiFactory {
 				creditoAReceber = valorCreditoAReceber(personEntity.getIdade(), personEntity.getSalario());
 
 				valorParcela = valorParcela(apiEntity.getSalario());
+				
+				quantidadeDeParcelas = quantidadeDeParcelas(creditoAReceber, valorParcela);
 
 				if (valorPedido <= creditoAReceber) {
 					apiEntity.setValorEmprestado(valorPedido);
 				} else {
 					apiEntity.setValorEmprestado(creditoAReceber);
 				}
+				
 				apiEntity.setValorParcela(valorParcela);
+				apiEntity.setQuantidadeParcelas(quantidadeDeParcelas);
 			}
 		}
 
@@ -151,8 +155,12 @@ public class ApiService implements ApiFactory {
 
 	}
 	
-	public Integer quantidadeDeParcelas() {
+	public Integer quantidadeDeParcelas(Double valorEmprestado, Double valorDaParcela) {
+		Integer quantidadeParcelas = null;
 		
+		quantidadeParcelas = (int) (valorEmprestado / valorDaParcela ) ;
+		
+		return quantidadeParcelas;
 	}
 
 }
