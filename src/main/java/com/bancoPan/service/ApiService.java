@@ -158,7 +158,8 @@ public class ApiService implements ApiFactory {
 	public Integer quantidadeDeParcelas(Double valorEmprestado, Double valorDaParcela) {
 		Integer quantidadeParcelas = null;
 		
-		quantidadeParcelas = (int) (valorEmprestado / valorDaParcela * 10) ;
+//		quantidadeParcelas = (int) (valorEmprestado / valorDaParcela ) * 10;
+		quantidadeParcelas = (int) (valorEmprestado / valorDaParcela ) ;
 		
 		return quantidadeParcelas;
 	}
