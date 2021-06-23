@@ -1,13 +1,18 @@
 package com.bancoPan.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bancoPan.entity.ApiEntity;
 import com.bancoPan.factory.ApiFactory;
+
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @CrossOrigin
 @RestController
@@ -16,13 +21,12 @@ public class ApiController {
 	@Autowired
 	private ApiFactory apiFactory;
 
-//	@GetMapping(path = "api/credito/buscarPessoasNaApi")
-//	public Object[] listaPessoasCadastradas() {
-//		return apiFactory.listaPessoasCadastradas();
-//	}
-
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Pesquisa realizada com sucesso!"),
+			@ApiResponse(code = 400, message = "Numero do valor pedido igual ou menor a zero!"),
+			@ApiResponse(code = 404, message = "Usuário não encontrado"),
+			@ApiResponse(code = 500, message = "Foi gerada uma exceção"), })
 	@GetMapping(path = "api/credito/{nome}/{valorPedido}")
-	public @ResponseBody String calcularValores(@PathVariable(value = "nome") String nome,
+	public @ResponseBody ResponseEntity<ApiEntity> calcularValores(@PathVariable(value = "nome") String nome,
 			@PathVariable(value = "valorPedido") Double valorPedido) {
 		return apiFactory.calcularValores(nome, valorPedido);
 	}
