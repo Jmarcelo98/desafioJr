@@ -14,9 +14,6 @@ public class PersonController {
 	@Autowired
 	private PersonFactory personFactory;
 
-	@GetMapping
-	public Object buscarPessoaCadastrada(String nome, Double valorCreditado) {
-		return personFactory.buscarPessoaCadastrada(nome, valorCreditado);
-	}
+
 
 }

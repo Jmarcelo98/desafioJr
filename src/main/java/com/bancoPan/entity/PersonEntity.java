@@ -1,24 +1,33 @@
 package com.bancoPan.entity;
-
+	
 public class PersonEntity {
 
-	private String nome;
-	private Double valorCreditado;
+	private String Nome;
+	private Double Salario;
+	private Integer Idade;
 
 	public String getNome() {
-		return nome;
+		return Nome;
 	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
+	public void setNome(String Nome) {
+		this.Nome = Nome;
 	}
 
-	public Double getValorCreditado() {
-		return valorCreditado;
+	public Double getSalario() {
+		return Salario;
 	}
 
-	public void setValorCreditado(Double valorCreditado) {
-		this.valorCreditado = valorCreditado;
+	public void setSalario(Double Salario) {
+		this.Salario = Salario;
+	}
+
+	public Integer getIdade() {
+		return Idade;
+	}
+
+	public void setIdade(Integer Idade) {
+		this.Idade = Idade;
 	}
 
 }
