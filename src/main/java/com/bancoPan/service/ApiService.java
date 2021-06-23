@@ -157,7 +157,7 @@ public class ApiService implements ApiFactory {
 
 		}
 
-		Double valorArredondado = Precision.round(valorParcela, 2);
+		Double valorArredondado = valorComDuasCasas(valorParcela);
 
 		return valorArredondado;
 
