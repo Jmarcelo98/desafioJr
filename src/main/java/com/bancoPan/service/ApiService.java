@@ -19,6 +19,23 @@ import com.google.gson.reflect.TypeToken;
 @Service
 public class ApiService implements ApiFactory {
 
+//	PORCENTAGENS DE ACORDO COM AS IDADES
+	private final Double IDADE_MAIOR_80 = 0.20;
+	private final Double IDADE_MAIOR_50 = 0.70;
+	private final Double IDADE_MAIOR_30 = 0.90;
+	private final Double IDADE_MAIOR_20 = 1.0;
+
+//	PORCENTAGEM DE ACORCO COM AS FAIXAS SALARIAS;
+	private final Double DE_1K_A_2K = 0.05;
+	private final Double DE_2K_A_3K = 0.10;
+	private final Double DE_3K_A_4K = 0.15;
+	private final Double DE_4K_A_5K = 0.20;
+	private final Double DE_5K_A_6K = 0.25;
+	private final Double DE_6K_A_7K = 0.30;
+	private final Double DE_7K_A_8K = 0.35;
+	private final Double DE_8K_A_9K = 0.40;
+	private final Double MAIOR_QUE_9K = 0.45;
+
 	ArrayList<PersonEntity> personArray;
 
 	@EventListener(ContextRefreshedEvent.class)
@@ -48,6 +65,7 @@ public class ApiService implements ApiFactory {
 		}
 
 		Double creditoAReceber = null;
+		Double valorParcela = null;
 		Integer quantidadeDeParcelas = null;
 
 		for (PersonEntity personEntity : personArray) {
@@ -58,35 +76,83 @@ public class ApiService implements ApiFactory {
 				apiEntity.setValorPedido(valorPedido);
 				apiEntity.setSalario(personEntity.getSalario());
 
-				if (personEntity.getIdade() >= 80) {
+				creditoAReceber = valorCreditoAReceber(personEntity.getIdade(), personEntity.getSalario());
 
-					creditoAReceber = 0.20 * personEntity.getSalario();
+				valorParcela = valorParcela(apiEntity.getSalario());
 
-				} else if (personEntity.getIdade() >= 50) {
-
-					creditoAReceber = 0.70 * personEntity.getSalario();
-
-				} else if (personEntity.getIdade() >= 30) {
-
-					creditoAReceber = 0.90 * personEntity.getSalario();
-
-				} else if (personEntity.getIdade() >= 20) {
-
-					creditoAReceber = 1 * personEntity.getSalario();
-
+				if (valorPedido <= creditoAReceber) {
+					apiEntity.setValorEmprestado(valorPedido);
+				} else {
+					apiEntity.setValorEmprestado(creditoAReceber);
 				}
-
-				apiEntity.setValorEmprestado(creditoAReceber);
-
-			} 
-
+				apiEntity.setValorParcela(valorParcela);
+			}
 		}
-		
-		 if (apiEntity.getNome() == null) {
+
+		if (apiEntity.getNome() == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 
 		return new ResponseEntity<>(apiEntity, HttpStatus.OK);
+	}
+
+	public Double valorCreditoAReceber(Integer idade, Double valor) {
+
+		Double creditoAReceber = null;
+
+		if (idade >= 80) {
+
+			creditoAReceber = valor * IDADE_MAIOR_80;
+
+		} else if (idade >= 50) {
+
+			creditoAReceber = valor * IDADE_MAIOR_50;
+
+		} else if (idade >= 30) {
+
+			creditoAReceber = valor * IDADE_MAIOR_30;
+
+		} else if (idade >= 20) {
+
+			creditoAReceber = valor * IDADE_MAIOR_20;
+
+		}
+
+		return creditoAReceber;
+
+	}
+
+	public Double valorParcela(Double salario) {
+
+		Double valorParcela = null;
+
+		if (salario >= 1000 && salario <= 2000) {
+			valorParcela = salario * DE_1K_A_2K;
+		} else if (salario >= 2001 && salario <= 3000) {
+			valorParcela = salario * DE_2K_A_3K;
+		} else if (salario >= 3001 && salario <= 4000) {
+			valorParcela = salario * DE_3K_A_4K;
+		} else if (salario >= 4001 && salario <= 5000) {
+			valorParcela = salario * DE_4K_A_5K;
+		} else if (salario >= 5001 && salario <= 6000) {
+			valorParcela = salario * DE_5K_A_6K;
+		} else if (salario >= 6001 && salario <= 7000) {
+			valorParcela = salario * DE_6K_A_7K;
+		} else if (salario >= 7001 && salario <= 8000) {
+			valorParcela = salario * DE_7K_A_8K;
+		} else if (salario >= 8001 && salario <= 9000) {
+			valorParcela = salario * DE_8K_A_9K;
+		} else if (salario >= 9001) {
+			valorParcela = salario * MAIOR_QUE_9K;
+
+		}
+
+		return valorParcela;
+
+	}
+	
+	public Integer quantidadeDeParcelas() {
+		
 	}
 
 }
