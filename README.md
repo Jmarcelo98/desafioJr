@@ -1,4 +1,4 @@
-# Sistema para um desafio para Desenvolvedor Java Junior
+# Sistema para um desafio de Desenvolvedor Java Junior
 
 ## Desenvolvedor
 * João Marcelo de Jesus Macedo (Jmarcelo98).
