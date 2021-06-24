@@ -65,8 +65,8 @@ public class ApiService implements ApiFactory {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 
-		Double creditoMaximoPermitido= null;
-		
+		Double creditoMaximoPermitido = null;
+
 		Double valorParcela = null;
 		Integer quantidadeDeParcelas = null;
 
@@ -76,20 +76,24 @@ public class ApiService implements ApiFactory {
 
 				creditoMaximoPermitido = valorCreditoMaximo(personEntity.getIdade(), personEntity.getSalario());
 				Double valorPedidoDuasCasasDecimais = valorComDuasCasas(valorPedido);
-				
+
 				if (valorPedidoDuasCasasDecimais > creditoMaximoPermitido) {
 					return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-				} else {	
+				} else {
 					apiEntity.setValorPedido(valorPedidoDuasCasasDecimais);
 					apiEntity.setValorEmprestado(valorPedidoDuasCasasDecimais);
 				}
-				
-				apiEntity.setNome(personEntity.getNome());			
-			
+
+				apiEntity.setNome(personEntity.getNome());
+
 				Double salarioDuasCasasDecimais = valorComDuasCasas(personEntity.getSalario());
-				apiEntity.setSalario(salarioDuasCasasDecimais);			
+				apiEntity.setSalario(salarioDuasCasasDecimais);
 
 				valorParcela = valorParcela(apiEntity.getValorEmprestado(), apiEntity.getSalario());
+				
+				if (valorParcela == null) {
+					return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+				}
 
 				quantidadeDeParcelas = quantidadeDeParcelas(apiEntity.getValorEmprestado(), valorParcela);
 
@@ -137,7 +141,9 @@ public class ApiService implements ApiFactory {
 
 		Double valorParcela = null;
 
-		if (valorCreditoEmprestado >= 1000 && valorCreditoEmprestado <= 2000) {
+		if (valorCreditoEmprestado < 1000) {
+			return null;
+		} else if (valorCreditoEmprestado >= 1000 && valorCreditoEmprestado <= 2000) {
 			valorParcela = salario * DE_1K_A_2K;
 		} else if (valorCreditoEmprestado >= 2001 && valorCreditoEmprestado <= 3000) {
 			valorParcela = salario * DE_2K_A_3K;
@@ -167,12 +173,12 @@ public class ApiService implements ApiFactory {
 		Double quantidadeParcelas = (valorCreditoEmprestado / valorParcela);
 
 		double arredondar = arredondarPraCima(quantidadeParcelas);
-		
+
 		return (int) arredondar;
 	}
-	
-	public double arredondarPraCima(Double valor) {	
-		return Math.ceil(valor);	
+
+	public double arredondarPraCima(Double valor) {
+		return Math.ceil(valor);
 	}
 
 	public Double valorComDuasCasas(Double valor) {
