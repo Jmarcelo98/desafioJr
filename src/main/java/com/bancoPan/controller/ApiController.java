@@ -22,7 +22,7 @@ public class ApiController {
 	private ApiFactory apiFactory;
 
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Pesquisa realizada com sucesso!"),
-			@ApiResponse(code = 400, message = "Numero do valor pedido igual ou menor a zero!"),
+			@ApiResponse(code = 400, message = "Número do valor pedido igual ou menor a zero OU número do pedido superior ao permitido"),
 			@ApiResponse(code = 404, message = "Usuário não encontrado"),
 			@ApiResponse(code = 500, message = "Foi gerada uma exceção"), })
 	@GetMapping(path = "api/credito/{nome}/{valorPedido}")

@@ -65,7 +65,8 @@ public class ApiService implements ApiFactory {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 
-		Double creditoAReceber = null;
+		Double creditoMaximoPermitido= null;
+		
 		Double valorParcela = null;
 		Integer quantidadeDeParcelas = null;
 
@@ -73,27 +74,25 @@ public class ApiService implements ApiFactory {
 
 			if (personEntity.getNome().equalsIgnoreCase(nome)) {
 
-				apiEntity.setNome(personEntity.getNome());
-
-				Double valorPedidoArredondado = valorComDuasCasas(valorPedido);
-				Double salarioArredondado = valorComDuasCasas(personEntity.getSalario());
-
-				apiEntity.setValorPedido(valorPedidoArredondado);
-				apiEntity.setSalario(salarioArredondado);
-
-				creditoAReceber = valorCreditoAReceber(personEntity.getIdade(), personEntity.getSalario());
+				creditoMaximoPermitido = valorCreditoMaximo(personEntity.getIdade(), personEntity.getSalario());
+				Double valorPedidoDuasCasasDecimais = valorComDuasCasas(valorPedido);
 				
-				if (valorPedidoArredondado <= creditoAReceber) {
-					apiEntity.setValorEmprestado(valorPedidoArredondado);
-				} else {
-					apiEntity.setValorEmprestado(creditoAReceber);
+				if (valorPedidoDuasCasasDecimais > creditoMaximoPermitido) {
+					return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+				} else {	
+					apiEntity.setValorPedido(valorPedidoDuasCasasDecimais);
+					apiEntity.setValorEmprestado(valorPedidoDuasCasasDecimais);
 				}
+				
+				apiEntity.setNome(personEntity.getNome());			
+			
+				Double salarioDuasCasasDecimais = valorComDuasCasas(personEntity.getSalario());
+				apiEntity.setSalario(salarioDuasCasasDecimais);			
 
 				valorParcela = valorParcela(apiEntity.getValorEmprestado(), apiEntity.getSalario());
 
 				quantidadeDeParcelas = quantidadeDeParcelas(apiEntity.getValorEmprestado(), valorParcela);
 
-			
 				apiEntity.setValorParcela(valorParcela);
 				apiEntity.setQuantidadeParcelas(quantidadeDeParcelas);
 			}
@@ -106,7 +105,7 @@ public class ApiService implements ApiFactory {
 		return new ResponseEntity<>(apiEntity, HttpStatus.OK);
 	}
 
-	public Double valorCreditoAReceber(Integer idade, Double valor) {
+	public Double valorCreditoMaximo(Integer idade, Double valor) {
 
 		Double creditoAReceber = null;
 
